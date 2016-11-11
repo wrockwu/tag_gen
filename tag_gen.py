@@ -26,6 +26,7 @@ def search_src(root, file, cpl):
 
 def search_file(path, cpl):
     for root, dirs, files in os.walk(path, topdown=True):
+        root = os.path.abspath(root)
         for file in files:
             search_src(root, file, cpl)
         for dir in dirs:
