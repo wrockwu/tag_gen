@@ -3,6 +3,10 @@ import getopt
 import sys
 import logging
 
+h_path = os.path.expanduser('~')
+th_path = h_path + '/taghome'
+#pri_path = th_path + '/test'
+#log_path = prj_path + '/' + 'search.log'
 
 def search_src(root, file, cpl):
     name_str = os.path.splitext(file)
@@ -13,13 +17,12 @@ def search_src(root, file, cpl):
         src_file = os.path.join(root,file)
         
         if cpl:
-            logging.info("%s" %(src_file))
-        else:
             obj = basename + '.o'
             obj_file = os.path.join(root,obj)
-
             if os.path.exists(obj_file):
                 logging.info("%s" %(src_file))
+        else:
+            logging.info("%s" %(src_file))
 
 def search_file(path, cpl):
     for root, dirs, files in os.walk(path, topdown=True):
@@ -29,13 +32,17 @@ def search_file(path, cpl):
             search_file(dir, cpl)
 
 def parse_dir(va):
-    h_path = os.path.expanduser('~')
-    th_path = h_path + '/taghome' 
+    global prj_path, log_path
     prj_path = th_path + '/' + va
+    log_path = prj_path + '/search.log'
     
     if os.path.exists(th_path):
         if os.path.exists(prj_path):
-            print("use pre fold...")
+            if os.path.exists(log_path):
+                os.remove(log_path)
+                print("remove pre log file...")
+            else:
+                print("create new log file")
         else:
             try:
                 os.mkdir(prj_path)
@@ -50,7 +57,6 @@ def parse_dir(va):
             print("create fold failed...")
             return False
 
-    log_path = prj_path + '/' + 'search.log' 
     logging.basicConfig(level=logging.DEBUG, format='', filename=log_path, filemode='a')
     return True
 
@@ -89,4 +95,8 @@ if __name__=='__main__':
     for p in src_path :
         search_file(p, cpl)
 
+    os.chdir(prj_path)
+    os.system("cscope -Rbq -i %s"%(log_path))
+    os.system("ctags -L %s"%(log_path))
+    
     sys.exit()
