@@ -13,16 +13,18 @@ def search_src(root, file, cpl):
     basename = name_str[0]
     baseneme = os.path.abspath(basename)
     extname = name_str[1]
-    if extname in ['.c', '.C', '.s', '.S', '.h', '.H', '.lds']:
-        src_file = os.path.join(root,file)
-        
+
+    src_file = os.path.join(root,file)
+    if extname in ['.h', '.H', '.lds']:
+        logging.info("%s"%(src_file))
+    if extname in ['.c', '.C', '.s', '.S']:
         if cpl:
             obj = basename + '.o'
             obj_file = os.path.join(root,obj)
             if os.path.exists(obj_file):
-                logging.info("%s" %(src_file))
+                logging.info("%s"%(src_file))
         else:
-            logging.info("%s" %(src_file))
+            logging.info("%s"%(src_file))
 
 def search_file(path, cpl):
     for root, dirs, files in os.walk(path, topdown=True):
