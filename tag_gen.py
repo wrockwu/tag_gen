@@ -13,7 +13,7 @@ def search_src(root, file, cpl):
     basename = name_str[0]
     baseneme = os.path.abspath(basename)
     extname = name_str[1]
-    if extname in ['.c', '.C', '.s', '.S']:
+    if extname in ['.c', '.C', '.s', '.S', '.h', '.H', '.lds']:
         src_file = os.path.join(root,file)
         
         if cpl:
