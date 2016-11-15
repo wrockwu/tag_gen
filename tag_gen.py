@@ -17,11 +17,13 @@ def search_src(root, file, cpl):
     src_file = os.path.join(root,file)
     if extname in ['.h', '.H', '.lds']:
         logging.info("%s"%(src_file))
-    if extname in ['.c', '.C', '.s', '.S']:
+    if extname in ['.c', '.C', '.s', '.S', '.dts', '.dtsi']:
         if cpl:
             obj = basename + '.o'
+            dtb = basename + '.dtb'
             obj_file = os.path.join(root,obj)
-            if os.path.exists(obj_file):
+            dtb_file = os.path.join(root,dtb)
+            if os.path.exists(obj_file) or os.path.exists(dtb_file):
                 logging.info("%s"%(src_file))
         else:
             logging.info("%s"%(src_file))
