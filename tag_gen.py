@@ -15,15 +15,16 @@ def search_src(root, file, cpl):
     extname = name_str[1]
 
     src_file = os.path.join(root,file)
-    if extname in ['.h', '.H', '.lds']:
+    if extname in ['.h', '.H', '.lds', '.dtb']:
         logging.info("%s"%(src_file))
     if extname in ['.c', '.C', '.s', '.S', '.dts', '.dtsi']:
         if cpl:
             obj = basename + '.o'
-            dtb = basename + '.dtb'
+#            dtb = basename + '.dtb'
             obj_file = os.path.join(root,obj)
-            dtb_file = os.path.join(root,dtb)
-            if os.path.exists(obj_file) or os.path.exists(dtb_file):
+#            dtb_file = os.path.join(root,dtb)
+#            if os.path.exists(obj_file) or os.path.exists(dtb_file):
+            if os.path.exists(obj_file):
                 logging.info("%s"%(src_file))
         else:
             logging.info("%s"%(src_file))
@@ -66,7 +67,7 @@ def parse_dir(va):
     return True
 
 def help_msg():
-    print("Command Usage: python3 rmidlsrc -d [dir] -p [src path]")
+    print("Command Usage: python3 rmidlsrc -p [tag path] -d [src dir]")
 
 if __name__=='__main__':
     try:
@@ -86,16 +87,17 @@ if __name__=='__main__':
     src_path = []
     for op, va in opts:
         if op in ['-p', '--path']:
-            src_path.append(va)
-            for arg in args:
-                src_path.append(va)
+            prj_path_res = parse_dir(va)
         elif op in ['-h', '--help']:
             help_msg()
             sys.exit()
         elif op in ['-c', '--cplile']:
             cpl = True
         elif op in ['-d', '--dir']:
-            prj_path_res = parse_dir(va)
+            src_path.append(va)
+            for arg in args:
+                src_path.append(va)
+
     
     for p in src_path :
         search_file(p, cpl)
