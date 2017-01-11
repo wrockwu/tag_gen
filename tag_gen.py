@@ -11,31 +11,36 @@ th_path = h_path + '/taghome'
 def search_src(root, file, cpl):
     name_str = os.path.splitext(file)
     basename = name_str[0]
-    basename = os.path.abspath(basename)
+#    basename = os.path.abspath(basename)
     extname = name_str[1]
 
     src_file = os.path.join(root,file)
     if extname in ['.h', '.H', '.lds', '.dtb']:
         logging.info("%s"%(src_file))
-    if extname in ['.c', '.C', '.s', '.S', '.dts', '.dtsi']:
+    elif extname in ['.c', '.C', '.s', '.S', '.dts', '.dtsi']:
         if cpl:
             obj = basename + '.o'
-#            dtb = basename + '.dtb'
+            dtb = basename + '.dtb'
             obj_file = os.path.join(root,obj)
-#            dtb_file = os.path.join(root,dtb)
-#            if os.path.exists(obj_file) or os.path.exists(dtb_file):
-            if os.path.exists(obj_file):
+            dtb_file = os.path.join(root,dtb)
+            if os.path.exists(obj_file) or os.path.exists(dtb_file):
+                print("add file:%s"%(src_file))
                 logging.info("%s"%(src_file))
         else:
+            print("add file:%s"%(src_file))
             logging.info("%s"%(src_file))
 
 def search_file(path, cpl):
     for root, dirs, files in os.walk(path, topdown=True):
+        if "/." in root:
+            #ignore dir as '.git' '.vim'
+            continue
         root = os.path.abspath(root)
         for file in files:
+            if file.startswith("."):
+                #ignore file start with '.', such as '.config' '.build-in.o.cmd'
+                continue
             search_src(root, file, cpl)
-        for dir in dirs:
-            search_file(dir, cpl)
 
 def parse_dir(va):
     global prj_path, log_path
