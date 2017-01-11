@@ -11,7 +11,7 @@ th_path = h_path + '/taghome'
 def search_src(root, file, cpl):
     name_str = os.path.splitext(file)
     basename = name_str[0]
-    baseneme = os.path.abspath(basename)
+    basename = os.path.abspath(basename)
     extname = name_str[1]
 
     src_file = os.path.join(root,file)
