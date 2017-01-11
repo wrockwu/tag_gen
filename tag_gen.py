@@ -11,7 +11,6 @@ th_path = h_path + '/taghome'
 def search_src(root, file, cpl):
     name_str = os.path.splitext(file)
     basename = name_str[0]
-#    basename = os.path.abspath(basename)
     extname = name_str[1]
 
     src_file = os.path.join(root,file)
@@ -76,7 +75,7 @@ def help_msg():
 
 if __name__=='__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'chd:p:', ['--cplile'])
+        opts, args = getopt.getopt(sys.argv[1:], 'chka:d:p:', ['--arch=', '--compile', '--dir=', '--path=', '--help' ])
     except Exception as err:
         print("Command failed:%s" %err)
         help_msg()
@@ -87,16 +86,22 @@ if __name__=='__main__':
         help_msg()
         exit(0)
     
+    arch = None
+    kernel = False
     prj_path_res = False
     cpl = False
     src_path = []
     for op, va in opts:
-        if op in ['-p', '--path']:
+        if op in ['-a', '--arch']:
+            arch = va
+        elif op in ['-k', '--kernel']:
+            kernel = True
+        elif op in ['-p', '--path']:
             prj_path_res = parse_dir(va)
         elif op in ['-h', '--help']:
             help_msg()
             sys.exit()
-        elif op in ['-c', '--cplile']:
+        elif op in ['-c', '--compile']:
             cpl = True
         elif op in ['-d', '--dir']:
             src_path.append(va)
@@ -104,11 +109,33 @@ if __name__=='__main__':
                 src_path.append(va)
 
     
-    for p in src_path :
+    for p in src_path:
         search_file(p, cpl)
 
+    if kernel is True:
+        path = os.path.abspath(src_path[0])
+        if path.endswith('/'):
+            arch_root = path + 'arch/'
+            arch_path = arch_root + str(arch)
+        else:
+            arch_root = path + '/arch/'
+            arch_path = arch_root + str(arch)
+
     os.chdir(prj_path)
-    os.system("cscope -Rbq -i %s"%(log_path))
-    os.system("ctags -L %s"%(log_path))
+
+    cscope_log = prj_path + '/cscope.log'
+    with open(log_path) as f:
+        with open(cscope_log, 'w') as wf:
+            for line in f.readlines():
+                if arch_root in line:
+                    if arch_path in line:
+                        wf.write(line)
+                    else:
+                        continue
+                else:
+                    wf.write(line)
+
+    os.system("cscope -Rbq -i %s"%(cscope_log))
+    os.system("ctags -L %s"%(cscope_log))
     
     sys.exit()
