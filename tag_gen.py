@@ -131,6 +131,7 @@ if __name__=='__main__':
                     if arch_path in line:
                         wf.write(line)
                     else:
+                        print("remove file:%s"%(line))
                         continue
                 else:
                     wf.write(line)
