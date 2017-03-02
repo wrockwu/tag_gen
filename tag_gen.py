@@ -14,7 +14,7 @@ def search_src(root, file, cpl):
     extname = name_str[1]
 
     src_file = os.path.join(root,file)
-    if extname in ['.h', '.H', '.lds', '.dtb']:
+    if extname in ['.h', '.H', '.lds']:
         logging.info("%s"%(src_file))
     elif extname in ['.c', '.C', '.s', '.S', '.dts', '.dtsi']:
         if cpl:
