@@ -120,6 +120,8 @@ if __name__=='__main__':
         else:
             arch_root = path + '/arch/'
             arch_path = arch_root + str(arch)
+    else:
+        arch_root = 'NULL'
 
     os.chdir(prj_path)
 
@@ -127,12 +129,15 @@ if __name__=='__main__':
     with open(log_path) as f:
         with open(cscope_log, 'w') as wf:
             for line in f.readlines():
-                if arch_root in line:
-                    if arch_path in line:
-                        wf.write(line)
+                if kernel is True:
+                    if arch_root in line:
+                        if arch_path in line:
+                            wf.write(line)
+                        else:
+                            print("remove file:%s"%(line))
+                            continue
                     else:
-                        print("remove file:%s"%(line))
-                        continue
+                        wf.write(line)
                 else:
                     wf.write(line)
 
