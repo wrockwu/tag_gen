@@ -116,10 +116,10 @@ if __name__=='__main__':
         path = os.path.abspath(src_path[0])
         if path.endswith('/'):
             arch_root = path + 'arch/'
-            arch_path = arch_root + str(arch)
+            arch_path = arch_root + str(arch) + '/'
         else:
             arch_root = path + '/arch/'
-            arch_path = arch_root + str(arch)
+            arch_path = arch_root + str(arch) + '/'
     else:
         arch_root = 'NULL'
 
