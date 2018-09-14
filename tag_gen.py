@@ -7,6 +7,9 @@ h_path = os.path.expanduser('~')
 th_path = h_path + '/taghome'
 #pri_path = th_path + '/test'
 #log_path = prj_path + '/' + 'search.log'
+keep_list = ['abort-macro.S', 'proc-v7-2level.S', 'proc-v7-3level.S',
+             'proc-macros.S', 'calls.S', 'entry-header.S', 'head-common.S',
+             'entry-macro.S', 'copy_template.S']
 
 def search_src(root, file, cpl):
     name_str = os.path.splitext(file)
@@ -17,7 +20,7 @@ def search_src(root, file, cpl):
     if extname in ['.h', '.H', '.lds']:
         logging.info("%s"%(src_file))
     elif extname in ['.c', '.C', '.s', '.S', '.dts', '.dtsi']:
-        if cpl:
+        if (cpl) and (file not in keep_list):
             obj = basename + '.o'
             dtb = basename + '.dtb'
             obj_file = os.path.join(root,obj)
@@ -45,7 +48,7 @@ def parse_dir(va):
     global prj_path, log_path
     prj_path = th_path + '/' + va
     log_path = prj_path + '/search.log'
-    
+
     if os.path.exists(th_path):
         if os.path.exists(prj_path):
             if os.path.exists(log_path):
@@ -62,7 +65,7 @@ def parse_dir(va):
     else:
         try:
             os.mkdir(th_path)
-            os.mkdir(prj_path) 
+            os.mkdir(prj_path)
         except Exception as err:
             print("create fold failed...")
             return False
@@ -81,11 +84,11 @@ if __name__=='__main__':
         help_msg()
         print("Detail message as bellow:")
         sys.exit(2)
-    
+
     if not opts:
         help_msg()
         exit(0)
-    
+
     arch = None
     kernel = False
     prj_path_res = False
@@ -108,7 +111,7 @@ if __name__=='__main__':
             for arg in args:
                 src_path.append(va)
 
-    
+
     for p in src_path:
         search_file(p, cpl)
 
@@ -143,5 +146,5 @@ if __name__=='__main__':
 
     os.system("cscope -Rbq -i %s"%(cscope_log))
     os.system("ctags -L %s"%(cscope_log))
-    
+
     sys.exit()
