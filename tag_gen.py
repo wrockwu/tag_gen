@@ -9,7 +9,7 @@ th_path = h_path + '/taghome'
 #log_path = prj_path + '/' + 'search.log'
 keep_list = ['abort-macro.S', 'proc-v7-2level.S', 'proc-v7-3level.S',
              'proc-macros.S', 'calls.S', 'entry-header.S', 'head-common.S',
-             'entry-macro.S', 'copy_template.S']
+             'entry-macro.S', 'copy_template.S', 'call.S']
 
 def search_src(root, file, cpl):
     name_str = os.path.splitext(file)
